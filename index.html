@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentX — AI Agents Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
+:root{--bg:#030712;--card:#0f172a;--card2:#1e293b;--border:rgba(255,255,255,0.06);--cyan:#06b6d4;--violet:#8b5cf6;--green:#10b981;--text:#f1f5f9;--muted:#64748b;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(6,182,212,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:999;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,7,18,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--text);text-decoration:none;}
+.logo em{color:var(--cyan);font-style:normal;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:12px;align-items:center;}
+.btn{padding:10px 22px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-outline{border:1px solid rgba(255,255,255,0.12);color:var(--text);background:transparent;}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-fill{background:var(--cyan);color:#000;border:1px solid var(--cyan);}
+.btn-fill:hover{background:#fff;border-color:#fff;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 80px;position:relative;z-index:1;}
+.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(6,182,212,0.1) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border:1px solid rgba(6,182,212,0.35);border-radius:100px;font-size:12px;font-weight:600;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;background:rgba(6,182,212,0.06);margin-bottom:28px;animation:fadeUp 0.6s ease both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,120px);line-height:0.95;letter-spacing:2px;margin-bottom:24px;animation:fadeUp 0.7s ease 0.1s both;}
+.hero h1 .line2{background:linear-gradient(90deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-size:18px;color:var(--muted);font-weight:300;max-width:540px;line-height:1.7;margin:0 auto 44px;animation:fadeUp 0.7s ease 0.2s both;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.7s ease 0.3s both;}
+.btn-lg{padding:15px 34px;font-size:16px;border-radius:10px;}
+.hero-stats{display:flex;gap:64px;margin-top:72px;animation:fadeUp 0.7s ease 0.4s both;}
+.stat{text-align:center;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;color:var(--text);}
+.stat-l{font-size:12px;color:var(--muted);margin-top:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.preview-wrap{max-width:1100px;margin:0 auto;padding:0 32px 100px;position:relative;z-index:1;}
+.preview-box{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(6,182,212,0.07),0 40px 80px rgba(0,0,0,0.6);}
+.titlebar{background:var(--card2);padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.tb-dot{width:12px;height:12px;border-radius:50%;}
+.tb-r{background:#ff5f57;}.tb-y{background:#febc2e;}.tb-g{background:#28c840;}
+.tb-title{font-size:12px;color:var(--muted);margin:0 auto;letter-spacing:0.5px;}
+.db-body{display:grid;grid-template-columns:200px 1fr 260px;min-height:380px;}
+.db-side{background:rgba(0,0,0,0.25);border-right:1px solid var(--border);padding:16px 0;}
+.db-item{display:flex;align-items:center;gap:10px;padding:11px 18px;font-size:13px;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.db-item:hover,.db-item.on{background:rgba(6,182,212,0.08);color:var(--cyan);border-right:2px solid var(--cyan);}
+.db-main{padding:20px;display:flex;flex-direction:column;gap:14px;}
+.db-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.kpi-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.kpi-v{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--cyan);margin-top:2px;}
+.agent-row{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;}
+.adot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;}
+.adot.off{background:var(--muted);box-shadow:none;}
+.aname{flex:1;font-weight:500;}.astatus{font-size:11px;color:var(--muted);}
+.db-right{background:rgba(0,0,0,0.2);border-left:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:10px;}
+.db-right h5{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;}
+.bubble{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:11px;color:var(--muted);}
+.bubble.bot{border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.04);color:var(--text);}
+.bubble-name{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--cyan);margin-bottom:4px;}
+.wave{display:flex;align-items:center;gap:3px;height:28px;margin-top:auto;}
+.wbar{width:3px;border-radius:2px;background:var(--cyan);animation:wv 1.2s ease-in-out infinite;}
+@keyframes wv{0%,100%{height:4px;opacity:0.4;}50%{height:22px;opacity:1;}}
+.wbar:nth-child(1){animation-delay:0s}.wbar:nth-child(2){animation-delay:0.1s}.wbar:nth-child(3){animation-delay:0.2s}.wbar:nth-child(4){animation-delay:0.3s}.wbar:nth-child(5){animation-delay:0.4s}.wbar:nth-child(6){animation-delay:0.3s}.wbar:nth-child(7){animation-delay:0.2s}
+.section{padding:100px 48px;position:relative;z-index:1;}
+.sec-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--cyan);margin-bottom:14px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);letter-spacing:1px;line-height:1.05;max-width:580px;margin-bottom:16px;}
+.sec-sub{font-size:17px;color:var(--muted);font-weight:300;max-width:480px;line-height:1.7;margin-bottom:56px;}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:1100px;margin:0 auto;}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity 0.55s ease,transform 0.55s ease,border-color 0.3s,box-shadow 0.3s;}
+.feat-card.visible{opacity:1;transform:translateY(0);}
+.feat-card:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(6,182,212,0.07);}
+.feat-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;}
+.ic1{background:rgba(6,182,212,0.1);}.ic2{background:rgba(139,92,246,0.12);}.ic3{background:rgba(16,185,129,0.1);}.ic4{background:rgba(245,158,11,0.1);}
+.feat-card h3{font-size:20px;font-weight:700;margin-bottom:10px;}
+.feat-card p{color:var(--muted);font-size:14px;font-weight:300;line-height:1.7;margin-bottom:20px;}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.feat-list li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:9px;}
+.feat-list li::before{content:'✓';color:var(--cyan);font-weight:700;}
+.how-wrap{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);max-width:960px;margin:56px auto 0;position:relative;}
+.steps::before{content:'';position:absolute;top:27px;left:12.5%;right:12.5%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.step{padding:0 16px;text-align:center;position:relative;z-index:1;}
+.step-n{width:54px;height:54px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cyan);margin:0 auto 18px;box-shadow:0 0 20px rgba(6,182,212,0.2);}
+.step h4{font-size:15px;font-weight:700;margin-bottom:8px;}
+.step p{font-size:12px;color:var(--muted);line-height:1.6;}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1100px;margin:56px auto 0;}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative;transition:all 0.3s;}
+.price-card.hot{background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(139,92,246,0.07));border-color:rgba(6,182,212,0.3);transform:scale(1.04);}
+.price-card.trial{border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,rgba(16,185,129,0.06),transparent);}
+.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--cyan),var(--violet));color:#000;font-size:10px;font-weight:800;padding:4px 16px;border-radius:100px;white-space:nowrap;letter-spacing:1px;}
+.price-badge.green-badge{background:linear-gradient(90deg,var(--green),#059669);}
+.price-plan{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:14px;}
+.price-amt{font-family:'Bebas Neue',sans-serif;font-size:46px;letter-spacing:-1px;margin-bottom:4px;}
+.price-amt.grn{color:var(--green);}
+.price-amt sup{font-size:20px;vertical-align:top;margin-top:8px;display:inline-block;}
+.price-amt small{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:300;}
+.price-sub{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.price-div{height:1px;background:var(--border);margin:20px 0;}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;}
+.price-feats li{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;}
+.price-feats li::before{content:'✓';color:var(--green);flex-shrink:0;}
+.btn-block{display:block;width:100%;padding:13px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;border:none;}
+.btn-block.outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--text);}
+.btn-block.outline:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-block.solid{background:var(--cyan);color:#000;}
+.btn-block.solid:hover{background:#fff;}
+.btn-block.grn-btn{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.35);color:var(--green);}
+.btn-block.grn-btn:hover{background:rgba(16,185,129,0.25);}
+.cta-sec{padding:120px 48px;text-align:center;position:relative;z-index:1;overflow:hidden;}
+.cta-sec::before{content:'';position:absolute;width:800px;height:400px;background:radial-gradient(ellipse,rgba(139,92,246,0.12),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.cta-sec h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,80px);letter-spacing:2px;line-height:1.0;margin-bottom:18px;}
+.cta-sec p{font-size:18px;color:var(--muted);margin-bottom:40px;font-weight:300;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+footer{padding:56px 48px;border-top:1px solid var(--border);position:relative;z-index:1;}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--text);text-decoration:none;}
+.foot-logo em{color:var(--cyan);font-style:normal;}
+.foot-desc{font-size:13px;color:var(--muted);margin-top:10px;max-width:260px;line-height:1.7;}
+.foot-cols{display:flex;gap:56px;}
+.foot-col h6{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text);margin-bottom:16px;}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.foot-col ul li a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.foot-col ul li a:hover{color:var(--text);}
+.foot-bot{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;}
+.foot-bot p{font-size:12px;color:var(--muted);}
+.foot-bot span{font-size:12px;color:var(--cyan);}
+@media(max-width:900px){nav{padding:14px 20px;}.nav-links{display:none;}.hero{padding:110px 20px 60px;}.hero-stats{gap:28px;}.preview-wrap{padding:0 16px 60px;}.db-body{grid-template-columns:1fr;}.db-side,.db-right{display:none;}.section{padding:60px 20px;}.feat-grid{grid-template-columns:1fr;}.steps{grid-template-columns:1fr 1fr;}.steps::before{display:none;}.price-grid{grid-template-columns:1fr;}.price-card.hot{transform:none;}.cta-sec{padding:80px 20px;}footer{padding:40px 20px;}.foot-top{flex-direction:column;gap:36px;}.foot-cols{flex-wrap:wrap;gap:32px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">AGENT<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#">Docs</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-outline">Sign In</a>
+    <a href="#" class="btn btn-fill">Get Started Free</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="badge"><div class="badge-dot"></div>Next-Gen AI Agent Platform</div>
+  <h1>DEPLOY INTELLIGENT<br><span class="line2">AI AGENTS</span><br>AT SCALE</h1>
+  <p>Voice calling, smart scripts, automatic appointment booking, and chatbot agents — all in one powerful platform.</p>
+  <div class="hero-btns">
+    <a href="#" class="btn btn-fill btn-lg">Start for Free →</a>
+    <a href="#" class="btn btn-outline btn-lg">See a Demo</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">10M+</div><div class="stat-l">Calls Handled</div></div>
+    <div class="stat"><div class="stat-n">99.9%</div><div class="stat-l">Uptime</div></div>
+    <div class="stat"><div class="stat-n">5K+</div><div class="stat-l">Active Agents</div></div>
+    <div class="stat"><div class="stat-n">&lt;200ms</div><div class="stat-l">Response Time</div></div>
+  </div>
+</section>
+
+<div class="preview-wrap">
+  <div class="preview-box">
+    <div class="titlebar">
+      <div class="tb-dot tb-r"></div><div class="tb-dot tb-y"></div><div class="tb-dot tb-g"></div>
+      <div class="tb-title">AgentX Dashboard — Live</div>
+    </div>
+    <div class="db-body">
+      <div class="db-side">
+        <div class="db-item on">🤖 Agents</div>
+        <div class="db-item">📞 Voice Calls</div>
+        <div class="db-item">📝 Scripts</div>
+        <div class="db-item">📅 Appointments</div>
+        <div class="db-item">💬 Chatbots</div>
+        <div class="db-item">📊 Analytics</div>
+        <div class="db-item">⚙️ Settings</div>
+      </div>
+      <div class="db-main">
+        <div class="db-kpis">
+          <div class="kpi"><div class="kpi-l">Active Calls</div><div class="kpi-v">24</div></div>
+          <div class="kpi"><div class="kpi-l">Appointments Today</div><div class="kpi-v">87</div></div>
+          <div class="kpi"><div class="kpi-l">Chats Live</div><div class="kpi-v">142</div></div>
+        </div>
+        <div class="agent-row"><div class="adot"></div><div class="aname">Sales Agent Alpha</div><div class="astatus">🟢 On Call · 4:32</div></div>
+        <div class="agent-row"><div class="adot"></div><div class="aname">Support Agent Beta</div><div class="astatus">🟢 Booking Appointment</div></div>
+        <div class="agent-row"><div class="adot off"></div><div class="aname">Follow-up Agent</div><div class="astatus">⚪ Standby</div></div>
+        <div class="agent-row"><div class="adot"></div><div class="aname">Chatbot Agent Gamma</div><div class="astatus">🟢 5 Active Chats</div></div>
+      </div>
+      <div class="db-right">
+        <h5>Live Chat Preview</h5>
+        <div class="bubble bot"><div class="bubble-name">AgentX Bot</div>Hello! How can I help you today?</div>
+        <div class="bubble"><div class="bubble-name" style="color:var(--muted)">User</div>Book a consultation for tomorrow 3pm.</div>
+        <div class="bubble bot"><div class="bubble-name">AgentX Bot</div>Done! Booked for tomorrow 3:00 PM. Confirmation sent! 🎉</div>
+        <div style="margin-top:auto">
+          <h5 style="margin-bottom:8px">Voice Activity</h5>
+          <div class="wave"><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div><div class="wbar"></div></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px">Sales Agent Alpha — Live</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="sec-tag">Features</div>
+    <div class="sec-title">EVERYTHING YOUR AI AGENT NEEDS</div>
+    <div class="sec-sub">One platform to build, deploy, and manage all your intelligent agents.</div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon ic1">📞</div><h3>Voice Calling Agent</h3><p>Deploy AI agents that make and receive calls just like a human. Handle thousands of calls simultaneously.</p><ul class="feat-list"><li>Upload contact lists via CSV or API</li><li>Natural language voice conversations</li><li>Real-time transcription & recording</li><li>Hindi, English & 50+ languages</li><li>Inbound + Outbound calling</li></ul></div>
+      <div class="feat-card"><div class="feat-icon ic2">📝</div><h3>Script Manager</h3><p>Write custom conversation scripts for your agents. Control exactly what your agent says.</p><ul class="feat-list"><li>Visual drag-and-drop script builder</li><li>Conditional branching & logic</li><li>Dynamic variable injection</li><li>A/B test different scripts</li><li>Pre-built templates for sales & support</li></ul></div>
+      <div class="feat-card"><div class="feat-icon ic3">📅</div><h3>Auto Appointment Booking</h3><p>Your AI agent automatically books, confirms, and reminds customers. Zero manual effort.</p><ul class="feat-list"><li>Google Calendar & Outlook sync</li><li>Smart slot availability detection</li><li>Automated SMS & email reminders</li><li>Reschedule & cancellation handling</li><li>CRM integration (Salesforce, HubSpot)</li></ul></div>
+      <div class="feat-card"><div class="feat-icon ic4">💬</div><h3>Chatbot Agent</h3><p>Embed a powerful AI chatbot on your website. Train it on your data for 24/7 instant responses.</p><ul class="feat-list"><li>Train on PDFs, docs & websites</li><li>Embed on any website in 2 minutes</li><li>WhatsApp, Telegram & Slack integration</li><li>Human handoff when needed</li><li>Full conversation analytics</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="section how-wrap" id="how" style="text-align:center">
+  <div class="sec-tag" style="text-align:center">Process</div>
+  <div class="sec-title" style="margin:0 auto 12px;text-align:center">UP & RUNNING IN MINUTES</div>
+  <p style="color:var(--muted);font-size:16px;font-weight:300">No complex setup. No coding required.</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><h4>Create Your Agent</h4><p>Choose voice, script, chatbot, or appointment agent.</p></div>
+    <div class="step"><div class="step-n">02</div><h4>Upload Your Data</h4><p>Add contact lists, scripts, knowledge base, or calendar.</p></div>
+    <div class="step"><div class="step-n">03</div><h4>Configure & Test</h4><p>Customize behavior. Test it live instantly.</p></div>
+    <div class="step"><div class="step-n">04</div><h4>Go Live & Scale</h4><p>Handle thousands of interactions automatically.</p></div>
+  </div>
+</section>
+
+<section class="section" id="pricing" style="text-align:center">
+  <div class="sec-tag">Pricing</div>
+  <div class="sec-title" style="margin:0 auto 12px">SIMPLE, TRANSPARENT PRICING</div>
+  <p style="color:var(--muted);font-size:16px;font-weight:300;margin-bottom:0">Scale as you grow. No hidden fees.</p>
+  <div class="price-grid">
+    <div class="price-card trial"><div class="price-badge green-badge">🎁 7 DAYS FREE</div><div class="price-plan" style="margin-top:12px">Free Trial</div><div class="price-amt grn" style="font-size:42px">FREE<small> /7 days</small></div><div class="price-sub" style="color:#10b981;font-weight:600">Then ₹49/day · Auto Pay</div><div class="price-div"></div><ul class="price-feats"><li>7 days completely free</li><li>1 AI Agent</li><li>10 calls included</li><li>1 Script template</li><li>5 appointments</li><li>Cancel before day 7 anytime</li></ul><button class="btn-block grn-btn">Start 7-Day Free Trial →</button></div>
+    <div class="price-card"><div class="price-plan">Basic</div><div class="price-amt"><sup>₹</sup>4,999<small>/mo</small></div><div class="price-sub">Perfect to get started</div><div class="price-div"></div><ul class="price-feats"><li>2 AI Agents</li><li>1,000 calls / month</li><li>Script Manager (Basic)</li><li>50 appointments/month</li><li>1 Chatbot embed</li><li>Email support</li></ul><button class="btn-block outline">Get Started</button></div>
+    <div class="price-card hot"><div class="price-badge">MOST POPULAR</div><div class="price-plan" style="margin-top:10px">Pro</div><div class="price-amt"><sup>₹</sup>9,999<small>/mo</small></div><div class="price-sub">For growing businesses</div><div class="price-div"></div><ul class="price-feats"><li>10 AI Agents</li><li>5,000 calls / month</li><li>Advanced Script + A/B Test</li><li>Unlimited appointments</li><li>5 Chatbot embeds</li><li>CRM & Calendar integrations</li><li>Priority support</li></ul><button class="btn-block solid">Get Started →</button></div>
+    <div class="price-card"><div class="price-plan">Enterprise</div><div class="price-amt" style="font-size:36px">Custom</div><div class="price-sub">For large-scale operations</div><div class="price-div"></div><ul class="price-feats"><li>Unlimited Agents</li><li>Unlimited calls</li><li>Custom voice & branding</li><li>Dedicated infrastructure</li><li>99.99% SLA guarantee</li><li>Dedicated account manager</li><li>Custom integrations</li></ul><button class="btn-block outline">Contact Sales</button></div>
+  </div>
+</section>
+
+<section class="cta-sec">
+  <h2>READY TO TRANSFORM<br>YOUR BUSINESS?</h2>
+  <p>Join 5,000+ businesses already using AgentX to automate customer interactions.</p>
+  <div class="cta-btns">
+    <a href="#" class="btn btn-fill btn-lg">Start Free Trial →</a>
+    <a href="#" class="btn btn-outline btn-lg">Talk to Sales</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-top">
+    <div>
+      <a href="#" class="foot-logo">AGENT<em>X</em></a>
+      <p class="foot-desc">The most powerful AI agents platform for voice calling, appointment booking, and chatbot automation.</p>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col"><h6>Product</h6><ul><li><a href="#">Voice Agent</a></li><li><a href="#">Script Manager</a></li><li><a href="#">Appointment Booking</a></li><li><a href="#">Chatbot Agent</a></li><li><a href="#">Analytics</a></li></ul></div>
+      <div class="foot-col"><h6>Company</h6><ul><li><a href="#">About Us</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div class="foot-col"><h6>Legal</h6><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Security</a></li></ul></div>
+    </div>
+  </div>
+  <div class="foot-bot"><p>© 2025 AgentX. All rights reserved.</p><span>Made with AI ⚡</span></div>
+</footer>
+
+<!-- MODALS -->
+
+<div id="overlay" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;backdrop-filter:blur(4px);"></div>
+
+<!-- Signup Modal -->
+
+<div id="modal-signup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:#0f172a;border:1px solid rgba(6,182,212,0.3);border-radius:20px;padding:40px;width:90%;max-width:460px;box-shadow:0 0 60px rgba(6,182,212,0.15);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+    <div>
+      <div style="font-size:11px;color:#06b6d4;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px" id="modal-plan-label">Get Started Free</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px" id="modal-title">CREATE ACCOUNT</h2>
+    </div>
+    <button onclick="closeModal()" style="background:rgba(255,255,255,0.07);border:none;color:#94a3b8;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <input type="text" placeholder="Full Name" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="email" placeholder="Email Address" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="tel" placeholder="Phone Number" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="password" placeholder="Create Password" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <div id="plan-price-box" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:#06b6d4;display:none;"></div>
+    <button onclick="submitSignup()" style="background:#06b6d4;color:#000;border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all 0.2s;" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#06b6d4'" id="signup-btn">Create Account →</button>
+    <p style="font-size:12px;color:#64748b;text-align:center">Already have an account? <a href="#" onclick="openLogin()" style="color:#06b6d4;text-decoration:none">Sign In</a></p>
+  </div>
+</div>
+
+<!-- Login Modal -->
+
+<div id="modal-login" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:#0f172a;border:1px solid rgba(6,182,212,0.3);border-radius:20px;padding:40px;width:90%;max-width:420px;box-shadow:0 0 60px rgba(6,182,212,0.15);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+    <div>
+      <div style="font-size:11px;color:#06b6d4;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Welcome Back</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px">SIGN IN</h2>
+    </div>
+    <button onclick="closeModal()" style="background:rgba(255,255,255,0.07);border:none;color:#94a3b8;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <input type="email" placeholder="Email Address" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="password" placeholder="Password" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <div style="text-align:right;margin-top:-6px"><a href="#" style="font-size:12px;color:#06b6d4;text-decoration:none">Forgot Password?</a></div>
+    <button onclick="submitLogin()" style="background:#06b6d4;color:#000;border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#06b6d4'">Sign In →</button>
+    <p style="font-size:12px;color:#64748b;text-align:center">Don't have an account? <a href="#" onclick="openSignup('','Get Started Free')" style="color:#06b6d4;text-decoration:none">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- Contact/Demo Modal -->
+
+<div id="modal-contact" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;background:#0f172a;border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:40px;width:90%;max-width:460px;box-shadow:0 0 60px rgba(139,92,246,0.15);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+    <div>
+      <div style="font-size:11px;color:#8b5cf6;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px" id="contact-label">Talk to Sales</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px" id="contact-title">GET IN TOUCH</h2>
+    </div>
+    <button onclick="closeModal()" style="background:rgba(255,255,255,0.07);border:none;color:#94a3b8;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <input type="text" placeholder="Full Name" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="email" placeholder="Work Email" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <input type="tel" placeholder="Phone Number" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;" onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+    <textarea placeholder="Tell us about your business..." rows="3" style="background:#1e293b;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;color:#f1f5f9;font-size:14px;font-family:'Space Grotesk',sans-serif;outline:none;resize:none;" onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
+    <button onclick="submitContact()" style="background:#8b5cf6;color:#fff;border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;" onmouseover="this.style.background='#7c3aed'" onmouseout="this.style.background='#8b5cf6'" id="contact-btn">Send Message →</button>
+  </div>
+</div>
+
+<!-- Success Toast -->
+
+<div id="toast" style="display:none;position:fixed;bottom:30px;right:30px;z-index:2000;background:#10b981;color:#fff;padding:16px 24px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 32px rgba(16,185,129,0.3);animation:slideIn 0.3s ease;">
+  ✅ <span id="toast-msg">Success!</span>
+</div>
+
+<style>
+@keyframes slideIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+input::placeholder,textarea::placeholder{color:#475569;}
+</style>
+
+<script>
+// Sidebar
+document.querySelectorAll('.db-item').forEach(el=>{el.addEventListener('click',function(){document.querySelectorAll('.db-item').forEach(i=>i.classList.remove('on'));this.classList.add('on');});});
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.feat-card').forEach(el=>obs.observe(el));
+
+// Modal functions
+function showOverlay(){document.getElementById('overlay').style.display='block';}
+function hideOverlay(){document.getElementById('overlay').style.display='none';}
+
+function closeModal(){
+  ['modal-signup','modal-login','modal-contact'].forEach(id=>{document.getElementById(id).style.display='none';});
+  hideOverlay();
+}
+
+function openSignup(plan, label){
+  closeModal();
+  document.getElementById('modal-plan-label').textContent = label || 'Get Started Free';
+  document.getElementById('modal-title').textContent = plan === 'Trial' ? 'START TRIAL' : 'CREATE ACCOUNT';
+  document.getElementById('signup-btn').textContent = plan === 'Trial' ? 'Start Trial for ₹99 →' : 'Create Account →';
+  const box = document.getElementById('plan-price-box');
+  if(plan && plan !== ''){
+    box.style.display='block';
+    const prices = {'Trial':'₹99 one-time — 10 calls included','Starter':'₹2,999/month — 500 calls','Pro':'₹9,999/month — 5,000 calls'};
+    box.textContent = '📦 Plan: ' + plan + (prices[plan] ? ' · ' + prices[plan] : '');
+  } else { box.style.display='none'; }
+  document.getElementById('modal-signup').style.display='block';
+  showOverlay();
+}
+
+function openLogin(){
+  closeModal();
+  document.getElementById('modal-login').style.display='block';
+  showOverlay();
+}
+
+function openContact(label, title){
+  closeModal();
+  document.getElementById('contact-label').textContent = label || 'Talk to Sales';
+  document.getElementById('contact-title').textContent = title || 'GET IN TOUCH';
+  document.getElementById('contact-btn').textContent = label === 'Book a Demo' ? 'Book Demo →' : 'Send Message →';
+  document.getElementById('modal-contact').style.display='block';
+  showOverlay();
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3500);
+}
+
+function submitSignup(){
+  closeModal();
+  showToast('Account created! Welcome to AgentX 🎉');
+}
+function submitLogin(){
+  closeModal();
+  showToast('Logged in successfully! Welcome back 👋');
+}
+function submitContact(){
+  closeModal();
+  showToast('Message sent! We will contact you soon 📞');
+}
+
+// Wire up all buttons
+document.addEventListener('DOMContentLoaded', function(){
+  // Nav buttons
+  document.querySelectorAll('a[href="#"]').forEach(a => {
+    const txt = a.textContent.trim();
+    if(txt === 'Sign In') a.onclick = (e)=>{e.preventDefault();openLogin();};
+    else if(txt === 'Get Started Free') a.onclick = (e)=>{e.preventDefault();openSignup('','Get Started Free');};
+    else if(txt.includes('Start for Free') || txt.includes('Start Free Trial')) a.onclick = (e)=>{e.preventDefault();openSignup('','Start Free Trial');};
+    else if(txt.includes('See a Demo')) a.onclick = (e)=>{e.preventDefault();openContact('Book a Demo','BOOK A DEMO');};
+    else if(txt.includes('Talk to Sales')) a.onclick = (e)=>{e.preventDefault();openContact('Talk to Sales','GET IN TOUCH');};
+  });
+
+  // Pricing buttons
+  document.querySelectorAll('.btn-block').forEach(btn => {
+    const txt = btn.textContent.trim();
+    if(txt.includes('Start Trial')) btn.onclick = ()=>openSignup('Trial','Trial Plan — ₹99');
+    else if(txt === 'Get Started') btn.onclick = ()=>openSignup('Starter','Starter Plan');
+    else if(txt.includes('Get Started →')) btn.onclick = ()=>openSignup('Pro','Pro Plan');
+    else if(txt.includes('Contact Sales')) btn.onclick = ()=>openContact('Contact Sales','ENTERPRISE INQUIRY');
+  });
+});
+</script>
+
+</body>
+</html>
